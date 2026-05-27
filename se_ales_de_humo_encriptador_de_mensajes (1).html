@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Señales de Humo ☁️</title>
+    <!-- Tailwind CSS para un diseño ultra moderno y limpio -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para tipografías elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome para iconos bonitos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CryptoJS para encriptación AES real y segura -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #f5f3ff 100%);
+        }
+        .serif-text {
+            font-family: 'Instrument Serif', serif;
+        }
+        /* Efecto sutil para las tarjetas de fondo translúcido */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        /* Animación para el modal del tutorial */
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        .modal-content-active {
+            transform: scale(1) !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- COLUMNA IZQUIERDA: Herramienta de Encriptación -->
+        <div class="lg:col-span-7 glass-card rounded-3xl p-6 md:p-8 shadow-xl shadow-purple-100/40 flex flex-col justify-between relative">
+            <div>
+                <!-- Encabezado de la app con botón de tutorial -->
+                <div class="flex items-center justify-between gap-3 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 shadow-sm">
+                            <i class="fa-solid fa-cloud"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-semibold text-gray-800 text-lg">Señales de Humo</h1>
+                            <p class="text-xs text-gray-500">Nuestra propia lengua para evadir el mundo</p>
+                        </div>
+                    </div>
+                    <!-- Botón para ver el Tutorial -->
+                    <button onclick="abrirTutorial()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100/80 text-purple-700 text-xs font-semibold transition-all border border-purple-100 active:scale-95" title="Ver tutorial paso a paso">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>¿Cómo usar?</span>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <i class="fa-solid fa-key mr-1"></i> Nuestra Clave Secreta
+                        </label>
+                    </div>
+                    <input type="password" id="claveSecreta" placeholder="Escribe la palabra clave..." 
+                        class="w-full px-4 py-2.5 rounded-xl border border-purple-100 bg-white/50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm font-medium">
+                    
+                    <!-- Tarjeta de Pista sobre la clave (Mufasa) -->
+                    <div class="mt-2.5 p-3.5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100/70 text-xs text-purple-950 flex items-start gap-2.5 shadow-sm">
+                        <div class="text-purple-500 mt-0.5"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <div>
+                            <span class="font-semibold block text-purple-800 mb-0.5">Pista de nuestra clave:</span>
+                            ¿De qué película animada viene la frase: <span class="italic font-medium text-pink-700">"El corazón no olvida lo que los ojos han visto"</span>? (Escríbela en minúsculas).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5 relative">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                        Mensaje Claro (Normal)
+                    </label>
+                    <textarea id="textoClaro" placeholder="Escribe aquí tu mensaje privado..." 
+                        class="w-full h-32 p-4 rounded-2xl border border-purple-50 bg-white/50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all resize-none text-sm leading-relaxed"></textarea>
+                    <button onclick="copiarAlPortapapeles('textoClaro')" class="absolute bottom-3 right-3 text-gray-400 hover:text-purple-600 transition-colors p-1.5" title="Copiar mensaje">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <button onclick="encriptarMensaje()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-xl shadow-lg shadow-purple-200 transition-all flex items-center justify-center gap-2 text-sm active:scale-95">
+                        <i class="fa-solid fa-lock"></i> Encriptar Mensaje
+                    </button>
+                    <button onclick="desencriptarMensaje()" class="w-full bg-white hover:bg-gray-50 text-purple-600 border border-purple-200 font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm active:scale-95">
+                        <i class="fa-solid fa-lock-open"></i> Desencriptar Código
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                        Mensaje Encriptado (Código Secreto)
+                    </label>
+                    <textarea id="textoSecreto" placeholder="El código cifrado aparecerá aquí..." 
+                        class="w-full h-32 p-4 rounded-2xl border border-purple-50 bg-white/50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all resize-none text-sm font-mono leading-relaxed"></textarea>
+                    <button onclick="copiarAlPortapapeles('textoSecreto')" class="absolute bottom-3 right-3 text-gray-400 hover:text-purple-600 transition-colors p-1.5" title="Copiar código">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pie de página izquierdo -->
+            <div class="mt-6 pt-4 border-t border-purple-50 flex items-center justify-between text-xs text-gray-400">
+                <span>Cifrado Seguro AES-256</span>
+                <span>Desarrollado con amor ❤️</span>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 md:p-10 text-white shadow-xl shadow-pink-200/50 flex flex-col justify-between relative overflow-hidden">
+            <!-- Detalles decorativos flotantes -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative">
+                <!-- Iconos decorativos -->
+                <div class="flex items-center gap-2 text-pink-200 text-sm mb-8 font-medium tracking-wider uppercase">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <span>Una nota para ti</span>
+                </div>
+
+                <!-- Mensaje Principal Editado con tu dedicatoria -->
+                <p class="text-lg md:text-xl font-light leading-relaxed mb-8 text-pink-50">
+                    "Si no tengo medios normales para que puedas hablar conmigo, aprenderé a hacer <span class="font-medium text-white underline decoration-pink-300 underline-offset-4">señales de humo</span> por ti. Si me quieres decir cualquier cosa en cualquier momento, escríbelo y encriptalo..."
+                </p>
+
+                <!-- El Trozo de Poema -->
+                <div class="border-l-2 border-pink-200/40 pl-4 py-1 my-8 italic">
+                    <p class="serif-text text-3xl md:text-4xl text-white font-normal leading-tight">
+                        "una lengua propia para evadir el mundo"
+                    </p>
+                </div>
+            </div>
+
+            <!-- Firma y Cierre -->
+            <div class="relative mt-auto pt-6 border-t border-white/10 flex items-end justify-between">
+                <div>
+                    <span class="block text-xs text-pink-200 uppercase tracking-wider mb-1">Con todo mi amor</span>
+                    <span class="serif-text text-4xl text-white">te amo, danna.</span>
+                </div>
+                <div class="text-3xl text-pink-200/70 animate-bounce">
+                    ☁️
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Contenedor del Modal con fondo difuminado -->
+    <div id="modalTutorial" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Tarjeta del Tutorial -->
+        <div id="modalContenido" class="bg-white rounded-3xl w-full max-w-xl p-6 md:p-8 shadow-2xl transform scale-90 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            
+            <!-- Encabezado del modal -->
+            <div class="flex items-center justify-between border-b border-purple-50 pb-4 mb-6">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-sm">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">¿Cómo funciona la web?</h3>
+                </div>
+                <button onclick="cerrarTutorial()" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Pasos del Tutorial -->
+            <div class="space-y-6">
+                <!-- Paso 1 -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-1">Adivina la Clave Secreta</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Responde la pregunta de la pista. Escribe la palabra resultante en la sección <strong class="text-purple-600">"Nuestra Clave Secreta"</strong>. Recuerda que ambos deben escribir la misma palabra exacta en su pantalla.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 2 -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-1">Crea tu Señal de Humo (Encriptar)</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Escribe lo que quieras confesar en <strong class="text-purple-600">"Mensaje Claro"</strong> y haz clic en <strong class="text-purple-600">"Encriptar Mensaje"</strong>. Abajo aparecerá un código indescifrable. Cópialo usando el botón flotante de copiado.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-1">Envía el Código Secreto</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Pega ese código raro en WhatsApp o por donde hablen y envíaselo. Nadie que intercepte esa conversación podrá saber qué dice sin conocer la clave secreta.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">4</div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-1">Lee el Mensaje Oculto (Desencriptar)</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Cuando recibas un código, pégalo en la casilla <strong class="text-purple-600">"Mensaje Encriptado"</strong> de abajo, pon la clave secreta arriba y presiona <strong class="text-purple-600">"Desencriptar Código"</strong>. Tu mensaje se revelará arriba al instante.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de cierre de tutorial -->
+            <div class="mt-8 pt-4 border-t border-purple-50">
+                <button onclick="cerrarTutorial()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl shadow-lg shadow-purple-100 transition-all text-sm active:scale-95">
+                    Entendido, ¡vamos a escribir!
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Funciones para el Control del Modal del Tutorial
+        function abrirTutorial() {
+            const modal = document.getElementById("modalTutorial");
+            const contenido = document.getElementById("modalContenido");
+            modal.classList.add("modal-active");
+            contenido.classList.add("modal-content-active");
+        }
+
+        function cerrarTutorial() {
+            const modal = document.getElementById("modalTutorial");
+            const contenido = document.getElementById("modalContenido");
+            modal.classList.remove("modal-active");
+            contenido.classList.remove("modal-content-active");
+        }
+
+        // Cierra el modal si se hace clic fuera del contenido blanco
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById("modalTutorial");
+            if (e.target === modal) {
+                cerrarTutorial();
+            }
+        });
+
+        // Alertas estilizadas usando mensajes suaves en vez de alert nativo
+        function mostrarNotificacion(mensaje, tipo = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl shadow-xl text-xs font-semibold tracking-wide transition-all duration-300 z-50 text-white ${
+                tipo === 'success' ? 'bg-emerald-500' : 'bg-rose-500'
+            }`;
+            toast.innerHTML = mensaje;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Función para encriptar usando AES
+        function encriptarMensaje() {
+            const texto = document.getElementById("textoClaro").value.trim();
+            const clave = document.getElementById("claveSecreta").value.trim().toLowerCase(); // Aseguramos minúsculas para mufasa
+            
+            if (!texto) {
+                mostrarNotificacion("Por favor, escribe un mensaje en la caja superior primero.", "error");
+                return;
+            }
+            if (!clave) {
+                mostrarNotificacion("Por favor, adivina e ingresa la clave secreta.", "error");
+                return;
+            }
+
+            try {
+                const cifrado = CryptoJS.AES.encrypt(texto, clave).toString();
+                document.getElementById("textoSecreto").value = cifrado;
+                mostrarNotificacion("¡Mensaje encriptado con éxito! Copia el código de abajo.", "success");
+            } catch (error) {
+                mostrarNotificacion("Hubo un error al encriptar el mensaje.", "error");
+            }
+        }
+
+        // Función para desencriptar usando AES
+        function desencriptarMensaje() {
+            const textoCifrado = document.getElementById("textoSecreto").value.trim();
+            const clave = document.getElementById("claveSecreta").value.trim().toLowerCase(); // Aseguramos minúsculas para mufasa
+            
+            if (!textoCifrado) {
+                mostrarNotificacion("Por favor, pega el código encriptado en la caja inferior.", "error");
+                return;
+            }
+            if (!clave) {
+                mostrarNotificacion("Por favor, ingresa la clave secreta.", "error");
+                return;
+            }
+
+            try {
+                const bytes = CryptoJS.AES.decrypt(textoCifrado, clave);
+                const descifrado = bytes.toString(CryptoJS.enc.Utf8);
+                
+                if (!descifrado) {
+                    mostrarNotificacion("Clave incorrecta o código dañado. Inténtalo de nuevo.", "error");
+                    return;
+                }
+                
+                document.getElementById("textoClaro").value = descifrado;
+                mostrarNotificacion("¡Señal de humo descifrada con éxito!", "success");
+            } catch (error) {
+                mostrarNotificacion("Error: Clave incorrecta o formato inválido.", "error");
+            }
+        }
+
+        // Copiar textos cómodamente con fallback robusto
+        function copiarAlPortapapeles(idElemento) {
+            const textarea = document.getElementById(idElemento);
+            if (!textarea.value) {
+                mostrarNotificacion("La caja de texto está vacía, no hay nada que copiar.", "error");
+                return;
+            }
+
+            // Seleccionar y copiar el texto
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // Para móviles
+
+            try {
+                document.execCommand('copy');
+                
+                // Efecto visual temporal en la etiqueta correspondiente
+                const label = textarea.previousElementSibling;
+                const originalText = label.innerHTML;
+                label.innerHTML = `<span class="text-emerald-500 transition-all font-semibold"><i class="fa-solid fa-check"></i> ¡Copiado con éxito!</span>`;
+                setTimeout(() => {
+                    label.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                mostrarNotificacion("No se pudo copiar automáticamente.", "error");
+            }
+        }
+    </script>
+</body>
+</html>
